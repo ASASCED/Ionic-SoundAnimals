@@ -1,14 +1,45 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="primary">
+        <ion-title>
+            Sonidos App
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button *ngIf="ordenando == true" (click)="ordenando = false">
+                Ordenar
+            </ion-button>
+            <ion-button *ngIf="ordenando == false" (click)="ordenando = true">
+                Listo
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+    <ion-refresher slot="fixed" (ionRefresh)="recargarAnimales($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list>
+        <ion-reorder-group [disabled]="ordenando" (ionItemReorder)="reorder($event)">
+            <ion-item-sliding *ngFor="let animal of animales; let i = index">
+                <ion-item (click)="reproducir(animal)">
+                    <ion-avatar slot="start">
+                        <ion-img [src]="animal.imagen"></ion-img>
+                    </ion-avatar>
+                    <ion-label>{{ animal.nombre }}</ion-label>
+                    <ion-icon *ngIf="!animal.reproduciendo" name="play"></ion-icon>
+                    <ion-icon *ngIf="animal.reproduciendo" name="pause"></ion-icon>
+                    <ion-reorder slot="end"></ion-reorder>
+                </ion-item>
+                <ion-item-options side="start">
+                    <ion-item-option color="danger" (click)="borrarAnimal(i)">
+                        <ion-icon name="trash" slot="start"></ion-icon>
+                        <ion-label>
+                            Eliminar
+                        </ion-label>
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-reorder-group>
+    </ion-list>
 </ion-content>
